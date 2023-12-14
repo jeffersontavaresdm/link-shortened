@@ -15,14 +15,14 @@ class UrlController(private val service: ShortyService) {
 
   @PostMapping
   fun shorten(@RequestBody request: ShortyRequest): ShortyResponse {
-    return ShortyResponse(service.shorten(request.url))
+    return ShortyResponse(service.shorten(request.url).block() ?: "error")
   }
 
   @GetMapping("/{hash}")
   fun resolve(@PathVariable hash: String): ResponseEntity<HttpStatus> {
     return ResponseEntity
       .status(HttpStatus.MOVED_PERMANENTLY)
-      .location(URI.create(service.resolve(hash)))
+      .location(URI.create(service.resolve(hash).block() ?: "error"))
       .header(HttpHeaders.CONNECTION, "close")
       .build()
   }
