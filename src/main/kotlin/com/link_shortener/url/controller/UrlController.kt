@@ -1,7 +1,7 @@
 package com.link_shortener.url.controller
 
-import com.link_shortener.url.entity.dto.ShortyRequest
-import com.link_shortener.url.entity.dto.ShortyResponse
+import com.link_shortener.url.dto.ShortyRequest
+import com.link_shortener.url.dto.ShortyResponse
 import com.link_shortener.url.service.ShortyService
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -14,8 +14,10 @@ import java.net.URI
 class UrlController(private val service: ShortyService) {
 
   @PostMapping
-  fun shorten(@RequestBody request: ShortyRequest): ShortyResponse {
-    return ShortyResponse(service.shorten(request.url).block() ?: "error")
+  fun shorten(@RequestBody request: ShortyRequest): ResponseEntity<ShortyResponse> {
+    return ResponseEntity
+      .status(HttpStatus.OK)
+      .body(ShortyResponse(service.shorten(request.url).block() ?: "error"))
   }
 
   @GetMapping("/{hash}")

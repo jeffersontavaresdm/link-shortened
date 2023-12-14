@@ -36,7 +36,7 @@ class ShortyService(private val redisTemplate: ReactiveRedisTemplate<String, Str
       if (it) {
         sink.next(hash)
       } else {
-        sink.error(HashUnknownException("Failed to store URL"))
+        sink.error(RuntimeException("Failed to store URL"))
       }
     }
   }
@@ -45,6 +45,6 @@ class ShortyService(private val redisTemplate: ReactiveRedisTemplate<String, Str
     return redisTemplate
       .opsForValue()
       .get(hash)
-      .switchIfEmpty(Mono.error(HashUnknownException("URL not found")))
+      .switchIfEmpty(Mono.error(HashUnknownException("hash not found")))
   }
 }
